@@ -1,9 +1,29 @@
 /* 부모 컴포넌트 */
 
+import Child from './Child';
+import { useState, useCallback } from 'react';
+
 function App() {
+	console.log('부모 컴포넌트');
+
+	const [Counter, setCounter] = useState(0);
+	const [Input, setInput] = useState('');
+
+	const colors = ['red', 'green', 'blue'];
+
+	const updateCounter = useCallback(() => {
+		setCounter(Counter + 1);
+	}, [Counter]);
+
 	return (
-		<div className='App'>
+		<div>
 			<h1>Hello</h1>
+			<button onClick={() => setCounter(Counter + 1)}>Plus</button>
+			<p>{Counter}</p>
+
+			<input type='text' value={Input} onChange={(e) => setInput(e.target.value)} />
+
+			<Child counter={Counter} colors={colors} updateCounter={updateCounter} />
 		</div>
 	);
 }
@@ -67,6 +87,7 @@ export default App;
 	[ useCallback ]
 	- 부모 컴포넌트 안에서 props로 전달되는 함수 자체를 memoization 처리한다.
 	- 사용시 함수를 통째로 memoization 처리하기 때문에 함수 내부에서 특정 state값을 변경한다면 해당 state를 의존성 배열에 등록해서 해당 state가 변경될 때에만 임시로 memoization이 해제되도록 설정할 수 있다.
+	- useCallback(memoization 처리할 함수, 의존성 배열)
 
 	- 사용 사례
 		1. 자식으로 함수를 전달할 때 해당 함수를 memoization 처리하여 자식 컴포넌트의 재호출을 막고 싶을 때
